@@ -1,44 +1,35 @@
 apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
 kind: Deployment
 metadata:
-  name: simple-app-deployment
+  name: springboot-app
   labels:
-    app: simple-app
+    app: spring-app
 spec:
   selector:
     matchLabels:
-      app: simple-app
-  replicas: 2 # tells deployment to run 2 pods matching the template
+      app: spring-app
+  replicas: 1 
   template:
     metadata:
       labels:
-        app: simple-app
+        app: spring-app
     spec:
       containers:
-        - name: simple-app
-          image: docker.io/khairane/simpleapp:1.5
+        - name: spring-app
+          image: jfrogfreerepo.jfrog.io/docker-local/build-java-docker-k8s-poc:7
           ports:
             - containerPort: 8090
-          livenessProbe:
-            httpGet:
-              path: /actuator/health/liveness
-              port: 8090
-            initialDelaySeconds: 5
-            periodSeconds: 1
-          readinessProbe:
-            httpGet:
-              path: /actuator/health/readiness
-              port: 8090
-            initialDelaySeconds: 5
-            periodSeconds: 1
+      imagePullSecrets:
+        - name: jfrog-creds
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: my-simple-app-service
+  name: springboot-service
 spec:
   selector:
-    app: simple-app
+    app: spring-app
   ports:
     - protocol: TCP
       port: 80
