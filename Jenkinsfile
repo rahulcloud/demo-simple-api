@@ -56,17 +56,25 @@ pipeline {
                 }
             }
         }*/
+	stage('Update K8s docker image with latest build'){
+            steps {
+                script {
+				    def IMAGENAME = "${privateDockerRegistry}/${params.DOCKER_REPO}/build-${JOB_NAME}:${BUILD_NUMBER}"
+                    sh "sed -i 's|IMAGENAME|jfrogfreerepo.jfrog.io/docker-local/build-springboot-k8s-poc:8|g' k8s-deployment.yaml"
+                }
+            }
+        }
 	stage('Docker Deploy Dev'){
             steps{
                 sshagent(['minikube-server']) {
                     sh "scp -o StrictHostKeyChecking=no k8s-deployment.yaml ubuntu@3.88.222.101:/home/ubuntu/"
-		    script{
-			try{
-			    sh "ssh ubuntu@3.88.222.101 kubectl apply -f ."
-			}catch(error){
-			    sh "ssh ubuntu@3.88.222.101 kubectl create -f ." 
-			}
-		   }
+					script{
+					    try{
+						    sh "ssh ubuntu@3.88.222.101 kubectl apply -f ."
+					    }catch(error){
+						    sh "ssh ubuntu@3.88.222.101 kubectl create -f ." 
+					    }
+					}
 					
                 }
             }
