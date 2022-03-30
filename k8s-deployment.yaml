@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: spring-app
-          image: jfrogfreerepo.jfrog.io/docker-local/build-springboot-k8s-poc:8
+          image: IMAGENAME
           ports:
             - containerPort: 8090
       imagePullSecrets:
