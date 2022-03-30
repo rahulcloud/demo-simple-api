@@ -4,6 +4,7 @@ pipeline {
   agent any
   parameters {
         string (name: 'DOCKER_REPO', defaultValue: 'docker-local', description: 'Docker repository for pull/push')
+		choice(choices: 'true,null', description: 'You can skip k8s deployment with true', name: 'skipk8s')
     }
   options {
     buildDiscarder(logRotator(numToKeepStr: '5'))
@@ -57,6 +58,11 @@ pipeline {
             }
         }*/
 	stage('Update K8s docker image with latest build'){
+	    when {
+            expression {
+                params.skipk8s == null
+            }
+        }
             steps {
                 script {
 				    def IMAGENAME = "${privateDockerRegistry}/${params.DOCKER_REPO}/build-${JOB_NAME}:${BUILD_NUMBER}"
@@ -65,6 +71,11 @@ pipeline {
             }
         }
 	stage('Docker Deploy Dev'){
+	    when {
+            expression {
+                params.skipk8s == null
+            }
+        }
             steps{
                 sshagent(['minikube-server']) {
                     sh "scp -o StrictHostKeyChecking=no k8s-deployment.yaml ubuntu@3.88.222.101:/home/ubuntu/"
