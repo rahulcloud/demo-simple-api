@@ -4,7 +4,7 @@ pipeline {
   agent any
   parameters {
         string (name: 'DOCKER_REPO', defaultValue: 'docker-local', description: 'Docker repository for pull/push')
-		choice(choices: 'true,null', description: 'You can skip k8s deployment with true', name: 'skipk8s')
+		choice(choices: 'true\nnull', description: 'You can skip k8s deployment with true', name: 'skipk8s')
     }
   options {
     buildDiscarder(logRotator(numToKeepStr: '5'))
