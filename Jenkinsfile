@@ -60,7 +60,7 @@ pipeline {
             steps {
                 script {
 				    def IMAGENAME = "${privateDockerRegistry}/${params.DOCKER_REPO}/build-${JOB_NAME}:${BUILD_NUMBER}"
-                    sh "sed -i 's|IMAGENAME|jfrogfreerepo.jfrog.io/docker-local/build-springboot-k8s-poc:8|g' k8s-deployment.yaml"
+                    sh "sed -i 's|IMAGENAME|${IMAGENAME}|g' k8s-deployment.yaml"
                 }
             }
         }
