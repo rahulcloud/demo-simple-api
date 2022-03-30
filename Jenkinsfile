@@ -64,7 +64,7 @@ pipeline {
                 }
             }
         }
-	stage('Docker Deploy Dev'){
+	/**stage('Docker Deploy Dev'){
             steps{
                 sshagent(['minikube-server']) {
                     sh "scp -o StrictHostKeyChecking=no k8s-deployment.yaml ubuntu@3.88.222.101:/home/ubuntu/"
@@ -78,6 +78,6 @@ pipeline {
 					
                 }
             }
-        }
+        }*/
     }
 }
