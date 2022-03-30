@@ -49,10 +49,25 @@ pipeline {
                 }
             }
         }
-    stage('Deploying App to Kubernetes') {
+    /**stage('Deploying App to Kubernetes') {
             steps {
                script {
                    kubernetesDeploy(configs: "k8s-deployment.yaml", kubeconfigId: "kubernetes")
+                }
+            }
+        }*/
+	stage('Docker Deploy Dev'){
+            steps{
+                sshagent(['minikube-server']) {
+                    sh "scp -o StrictHostKeyChecking=no k8s-deployment.yaml ubuntu@3.88.222.101:/home/ubuntu/"
+		    script{
+			try{
+			    sh "ssh ubuntu@3.88.222.11 kubectl apply -f ."
+			}catch(error){
+			    sh "ssh ubuntu@3.88.222.11 kubectl create -f ." 
+			}
+		   }
+					
                 }
             }
         }
