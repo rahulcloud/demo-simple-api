@@ -4,7 +4,7 @@ pipeline {
   agent any
   parameters {
         string (name: 'DOCKER_REPO', defaultValue: 'docker-local', description: 'Docker repository for pull/push')
-		choice(choices: 'true\nnull', description: 'You can skip k8s deployment with true', name: 'skipk8s')
+		choice(choices: 'true\nfalse', description: 'You can skip k8s deployment with true', name: 'skipk8s')
     }
   options {
     buildDiscarder(logRotator(numToKeepStr: '5'))
@@ -73,7 +73,7 @@ pipeline {
 	/**stage('Docker Deploy Dev'){
 	    when {
             expression {
-                params.skipk8s == null
+                params.skipk8s == true
             }
         }
         steps{
@@ -91,6 +91,11 @@ pipeline {
             }
         }*/
 	stage('Deploying App to Kubernetes') {
+	    when {
+            expression {
+                params.skipk8s == true
+            }
+        }
             steps {
                script {
                    kubernetesDeploy(configs: "k8s-deployment.yaml", kubeconfigId: "kubernetes")
