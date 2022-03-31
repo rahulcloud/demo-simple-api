@@ -70,23 +70,30 @@ pipeline {
                 }
             }
         }
-	stage('Docker Deploy Dev'){
+	/**stage('Docker Deploy Dev'){
 	    when {
             expression {
                 params.skipk8s == null
             }
         }
-            steps{
-                sshagent(['minikube-server']) {
-                    sh "scp -o StrictHostKeyChecking=no k8s-deployment.yaml ubuntu@3.88.222.101:/home/ubuntu/"
-					script{
-					    try{
-						    sh "ssh ubuntu@3.88.222.101 kubectl apply -f ."
-					    }catch(error){
-						    sh "ssh ubuntu@3.88.222.101 kubectl create -f ." 
-					    }
-					}
+        steps{
+            sshagent(['minikube-server']) {
+                sh "scp -o StrictHostKeyChecking=no k8s-deployment.yaml ubuntu@3.88.222.101:/home/ubuntu/"
+				    script{
+			            try{
+				            sh "ssh ubuntu@3.88.222.101 kubectl apply -f ."
+				        }catch(error){
+				    	    sh "ssh ubuntu@3.88.222.101 kubectl create -f ." 
+				        }
+				    }
 					
+                }
+            }
+        }*/
+	stage('Deploying App to Kubernetes') {
+            steps {
+               script {
+                   kubernetesDeploy(configs: "k8s-deployment.yaml", kubeconfigId: "kubernetes")
                 }
             }
         }
