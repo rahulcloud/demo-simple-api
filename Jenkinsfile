@@ -4,7 +4,7 @@ pipeline {
   agent any
   parameters {
         string (name: 'DOCKER_REPO', defaultValue: 'docker-local', description: 'Docker repository for pull/push')
-	booleanParam(name: "SKIPK8S", defaultValue: false)
+	booleanParam(name: "SKIPK8S", defaultValue: false, description: 'Check the box to skip k8s stage')
     }
   options {
     buildDiscarder(logRotator(numToKeepStr: '5'))
@@ -12,7 +12,7 @@ pipeline {
   environment {
     CI = true
     ARTIFACTORY_ACCESS_TOKEN = credentials('jfrog-access-token')
-	ARTIFACTORY_LOGIN = credentials('jfrog-creds')
+    ARTIFACTORY_LOGIN = credentials('jfrog-creds')
   }
   stages {
     stage('Build') {
